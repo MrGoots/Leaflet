@@ -29,7 +29,6 @@ function createFeatures(earthquakeData) {
 function createMap(earthquakes) {
 
   // Create the base layers.
-
     let street = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     })
@@ -64,7 +63,35 @@ function createMap(earthquakes) {
         collapsed: false
     }).addTo(myMap);
 
-    let legend = L.control({position: 'bottomright'});
+// Markers
+
+function createMarker(feature, latlng) {
+    return L.circleMarker(latlng, {
+        radius: markerSize(feature.properties.mag),
+        fillColor: markerColor(feature.geometry.coordinates[2]),
+        color: "#000",
+        weight: 0.5,
+        opacity: 0.5,
+        fillOpacity: 1
+    });
+}
+
+function markerSize(magnitude) {
+    return magnitude * 5
+}
+
+function markerColor(depth) {
+    return depth > 90 ? '#d73027' :
+            depth > 70 ? '#fc8d59' :
+            depth > 50 ? '#fee08b' :
+            depth > 30 ? '#d9ef8b' :
+            depth > 10 ? '#91cf60' :
+                         '#1a9850' ;
+}
+
+// Legend
+
+let legend = L.control({position: 'bottomright'});
 
     legend.onAdd = function (myMap) {
 
@@ -87,30 +114,3 @@ function createMap(earthquakes) {
 
 }
 
-// Markers
-
-function createMarker(feature, latlng) {
-    return L.circleMarker(latlng, {
-        radius: markerSize(feature.properties.mag),
-        fillColor: markerColor(feature.geometry.coordinates[2]),
-        color: "#000",
-        weight: 0.5,
-        opacity: 0.5,
-        fillOpacity: 1
-    });
-}
-
-
-
-function markerSize(magnitude) {
-    return magnitude * 5;
-}
-
-function markerColor(depth) {
-    return depth > 90 ? '#d73027' :
-            depth > 70 ? '#fc8d59' :
-            depth > 50 ? '#fee08b' :
-            depth > 30 ? '#d9ef8b' :
-            depth > 10 ? '#91cf60' :
-                         '#1a9850' ;
-}
